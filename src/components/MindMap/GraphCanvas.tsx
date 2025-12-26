@@ -78,58 +78,58 @@ const GraphCanvas: React.FC = () => {
     
     graph.addEdges(edges);
 
-    // Simple manual layout - left to right
-    setTimeout(() => {
-      const cellsMap = new Map<string, any>();
-      graph.getNodes().forEach((node: any) => {
-        cellsMap.set(node.id, node);
-      });
+    // Calculate and apply layout
+    const cellsMap = new Map<string, any>();
+    graph.getNodes().forEach((node: any) => {
+      cellsMap.set(node.id, node);
+    });
 
-      // Position nodes in layers from left to right
-      const visited = new Set<string>();
-      const levelMap = new Map<string, number>();
+    // Position nodes in layers from left to right
+    const visited = new Set<string>();
+    const levelMap = new Map<string, number>();
+    
+    const calculateLevels = (nodeId: string, level: number) => {
+      if (visited.has(nodeId)) return;
+      visited.add(nodeId);
+      levelMap.set(nodeId, level);
       
-      const calculateLevels = (nodeId: string, level: number) => {
-        if (visited.has(nodeId)) return;
-        visited.add(nodeId);
-        levelMap.set(nodeId, level);
-        
-        // Find children
-        edges.forEach((edge: any) => {
-          if (edge.source === nodeId) {
-            calculateLevels(edge.target, level + 1);
-          }
-        });
-      };
-
-      // Start from root
-      if (nodes.length > 0) {
-        calculateLevels(nodes[0].id, 0);
-      }
-
-      // Position nodes by level
-      const levelNodes = new Map<number, string[]>();
-      levelMap.forEach((level, nodeId) => {
-        if (!levelNodes.has(level)) {
-          levelNodes.set(level, []);
+      // Find children
+      edges.forEach((edge: any) => {
+        if (edge.source === nodeId) {
+          calculateLevels(edge.target, level + 1);
         }
-        levelNodes.get(level)!.push(nodeId);
       });
+    };
 
-      levelNodes.forEach((nodeIds, level) => {
-        const xPos = level * 280;
-        nodeIds.forEach((nodeId, index) => {
-          const node = cellsMap.get(nodeId);
-          if (node) {
-            const yPos = index * 80 + 50;
-            node.setPosition(xPos, yPos);
-          }
-        });
+    // Start from root
+    if (nodes.length > 0) {
+      calculateLevels(nodes[0].id, 0);
+    }
+
+    // Position nodes by level
+    const levelNodes = new Map<number, string[]>();
+    levelMap.forEach((level, nodeId) => {
+      if (!levelNodes.has(level)) {
+        levelNodes.set(level, []);
+      }
+      levelNodes.get(level)!.push(nodeId);
+    });
+
+    levelNodes.forEach((nodeIds, level) => {
+      const xPos = level * 280;
+      nodeIds.forEach((nodeId, index) => {
+        const node = cellsMap.get(nodeId);
+        if (node) {
+          const yPos = index * 80 + 50;
+          node.setPosition(xPos, yPos);
+        }
       });
+    });
 
-      // Center the content
+    // Use requestAnimationFrame for smooth rendering
+    requestAnimationFrame(() => {
       graph.centerContent();
-    }, 100);
+    });
   }, [rootNode]);
 
   return (
