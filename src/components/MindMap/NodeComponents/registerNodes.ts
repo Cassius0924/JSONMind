@@ -2,6 +2,8 @@ import { Graph } from '@antv/x6';
 import { NodeType } from '../../../types/node';
 import { getColorByType, getIconByType } from '../../../core/transformer';
 
+const MAX_VALUE_DISPLAY_LENGTH = 12;
+
 export function registerCustomNodes() {
   // Register Container Node (Object/Array)
   Graph.registerNode(
@@ -163,7 +165,9 @@ export function updateNodeContent(node: any) {
     });
     
     // Value text with icon - right side
-    const displayValue = valueText.length > 12 ? valueText.substring(0, 12) + '...' : valueText;
+    const displayValue = valueText.length > MAX_VALUE_DISPLAY_LENGTH 
+      ? valueText.substring(0, MAX_VALUE_DISPLAY_LENGTH) + '...' 
+      : valueText;
     node.attr('value-text', {
       x: 165,
       y: 20,

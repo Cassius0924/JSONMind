@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '127.0.0.1', // 使用 IP 地址而不是 localhost
+    host: '127.0.0.1', // Use IP address instead of localhost
     port: 5173,
   },
 })
