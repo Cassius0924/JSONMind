@@ -18,6 +18,8 @@ export interface AppActions {
   setRootNode: (node: TreeNode | null) => void;
   setSelectedNodeId: (id: string | null) => void;
   updateNode: (nodeId: string, updates: Partial<TreeNode>) => void;
+  addChildNode: (parentId: string, newNode: TreeNode) => void;
+  deleteNode: (nodeId: string) => void;
 }
 
 let isUpdatingFromEditor = false;
@@ -110,6 +112,57 @@ export const useAppStore = create<AppState & AppActions>((set, get) => ({
 
     const updatedRoot = updateNodeRecursive(rootNode);
     set({ rootNode: updatedRoot });
+    get().syncToJson();
+  },
+
+  // Actions: Add child node
+  addChildNode: (parentId: string, newNode: TreeNode) => {
+    const { rootNode } = get();
+    if (!rootNode) return;
+
+    const addChildRecursive = (node: TreeNode): TreeNode => {
+      if (node.id === parentId && isContainerNode(node)) {
+        return {
+          ...node,
+          children: [...node.children, newNode]
+        };
+      }
+      if (isContainerNode(node)) {
+        return {
+          ...node,
+          children: node.children.map(addChildRecursive)
+        };
+      }
+      return node;
+    };
+
+    const updatedRoot = addChildRecursive(rootNode);
+    set({ rootNode: updatedRoot });
+    get().syncToJson();
+  },
+
+  // Actions: Delete node
+  deleteNode: (nodeId: string) => {
+    const { rootNode } = get();
+    if (!rootNode || rootNode.id === nodeId) {
+      // Can't delete root node
+      return;
+    }
+
+    const deleteNodeRecursive = (node: TreeNode): TreeNode => {
+      if (isContainerNode(node)) {
+        return {
+          ...node,
+          children: node.children
+            .filter(child => child.id !== nodeId)
+            .map(deleteNodeRecursive)
+        };
+      }
+      return node;
+    };
+
+    const updatedRoot = deleteNodeRecursive(rootNode);
+    set({ rootNode: updatedRoot, selectedNodeId: null });
     get().syncToJson();
   }
 }));

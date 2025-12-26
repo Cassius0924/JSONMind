@@ -57,6 +57,48 @@ export function registerCustomNodes() {
           fill: '#ffffff',
           rx: 6,
           ry: 6
+        },
+        keyBg: {
+          refX: 0,
+          refY: 0,
+          refWidth: '50%',
+          refHeight: '100%',
+          fill: '#f5f5f5',
+          stroke: 'none'
+        },
+        valueBg: {
+          refX: '50%',
+          refY: 0,
+          refWidth: '50%',
+          refHeight: '100%',
+          fill: '#52c41a',
+          fillOpacity: 0.15,
+          stroke: 'none'
+        },
+        divider: {
+          refX: '50%',
+          refY: 0,
+          refY2: '100%',
+          stroke: '#d9d9d9',
+          strokeWidth: 1
+        },
+        keyText: {
+          refX: '25%',
+          refY: '50%',
+          textAnchor: 'middle',
+          textVerticalAnchor: 'middle',
+          fontSize: 12,
+          fill: '#595959',
+          fontWeight: '500'
+        },
+        valueText: {
+          refX: '75%',
+          refY: '50%',
+          textAnchor: 'middle',
+          textVerticalAnchor: 'middle',
+          fontSize: 12,
+          fill: '#262626',
+          fontWeight: '500'
         }
       },
       markup: [
@@ -66,11 +108,11 @@ export function registerCustomNodes() {
         },
         {
           tagName: 'rect',
-          selector: 'key-bg'
+          selector: 'keyBg'
         },
         {
           tagName: 'rect',
-          selector: 'value-bg'
+          selector: 'valueBg'
         },
         {
           tagName: 'line',
@@ -78,11 +120,11 @@ export function registerCustomNodes() {
         },
         {
           tagName: 'text',
-          selector: 'key-text'
+          selector: 'keyText'
         },
         {
           tagName: 'text',
-          selector: 'value-text'
+          selector: 'valueText'
         }
       ]
     },
@@ -112,72 +154,17 @@ export function updateNodeContent(node: any) {
     const icon = getIconByType(data.type, data.value);
     const valueText = String(data.value);
     
-    // Main body border
-    node.attr('body/stroke', '#d9d9d9');
-    node.attr('body/strokeWidth', 1);
-    node.attr('body/fill', '#ffffff');
+    // Update value background color
+    node.attr('valueBg/fill', color);
     
-    // Left background (key side) - grey
-    node.attr('key-bg', {
-      x: 1,
-      y: 1,
-      width: 108,
-      height: 38,
-      fill: '#f5f5f5',
-      stroke: 'none',
-      pointerEvents: 'none'
-    });
+    // Update key text
+    const keyDisplay = data.key.length > 10 ? data.key.substring(0, 10) + '...' : data.key;
+    node.attr('keyText/text', keyDisplay);
     
-    // Right background (value side) - colored
-    node.attr('value-bg', {
-      x: 110,
-      y: 1,
-      width: 109,
-      height: 38,
-      fill: color,
-      opacity: 0.15,
-      stroke: 'none',
-      pointerEvents: 'none'
-    });
-    
-    // Divider line between key and value
-    node.attr('divider', {
-      x1: 110,
-      y1: 0,
-      x2: 110,
-      y2: 40,
-      stroke: '#d9d9d9',
-      strokeWidth: 1,
-      pointerEvents: 'none'
-    });
-    
-    // Key text - left side
-    node.attr('key-text', {
-      x: 55,
-      y: 20,
-      text: data.key,
-      fontSize: 12,
-      fill: '#595959',
-      textAnchor: 'middle',
-      textVerticalAnchor: 'middle',
-      fontWeight: '500',
-      pointerEvents: 'none'
-    });
-    
-    // Value text with icon - right side
+    // Update value text with icon
     const displayValue = valueText.length > MAX_VALUE_DISPLAY_LENGTH 
       ? valueText.substring(0, MAX_VALUE_DISPLAY_LENGTH) + '...' 
       : valueText;
-    node.attr('value-text', {
-      x: 165,
-      y: 20,
-      text: `${icon} ${displayValue}`,
-      fontSize: 12,
-      fill: '#262626',
-      textAnchor: 'middle',
-      textVerticalAnchor: 'middle',
-      fontWeight: '500',
-      pointerEvents: 'none'
-    });
+    node.attr('valueText/text', `${icon} ${displayValue}` );
   }
 }
