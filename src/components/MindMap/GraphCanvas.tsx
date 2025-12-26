@@ -5,6 +5,13 @@ import { treeToGraphData } from '../../core/transformer';
 import { registerCustomNodes, updateNodeContent } from './NodeComponents/registerNodes';
 import './GraphCanvas.css';
 
+// Register nodes once at module level
+let nodesRegistered = false;
+if (!nodesRegistered) {
+  registerCustomNodes();
+  nodesRegistered = true;
+}
+
 const GraphCanvas: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
@@ -12,9 +19,6 @@ const GraphCanvas: React.FC = () => {
 
   useEffect(() => {
     if (!containerRef.current) return;
-
-    // Register custom nodes
-    registerCustomNodes();
 
     // Initialize graph
     const graph = new Graph({
@@ -143,6 +147,7 @@ const GraphCanvas: React.FC = () => {
       }}>
         <button 
           onClick={() => graphRef.current?.zoom(0.1)}
+          aria-label="Zoom in"
           style={{
             padding: '6px 12px',
             cursor: 'pointer',
@@ -155,6 +160,7 @@ const GraphCanvas: React.FC = () => {
         </button>
         <button 
           onClick={() => graphRef.current?.zoom(-0.1)}
+          aria-label="Zoom out"
           style={{
             padding: '6px 12px',
             cursor: 'pointer',
@@ -167,6 +173,7 @@ const GraphCanvas: React.FC = () => {
         </button>
         <button 
           onClick={() => graphRef.current?.centerContent()}
+          aria-label="Fit view to content"
           style={{
             padding: '6px 12px',
             cursor: 'pointer',

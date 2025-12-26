@@ -64,19 +64,19 @@ export function registerCustomNodes() {
         },
         {
           tagName: 'rect',
-          selector: 'key-part'
+          selector: 'key-bg'
+        },
+        {
+          tagName: 'rect',
+          selector: 'value-bg'
+        },
+        {
+          tagName: 'line',
+          selector: 'divider'
         },
         {
           tagName: 'text',
           selector: 'key-text'
-        },
-        {
-          tagName: 'rect',
-          selector: 'value-part'
-        },
-        {
-          tagName: 'text',
-          selector: 'value-icon'
         },
         {
           tagName: 'text',
@@ -108,56 +108,72 @@ export function updateNodeContent(node: any) {
   } else if (node.shape === 'split-node') {
     const color = getColorByType(data.type);
     const icon = getIconByType(data.type, data.value);
+    const valueText = String(data.value);
     
-    // Key part (left side)
-    node.attr('key-part', {
-      x: 0,
-      y: 0,
-      width: 110,
-      height: 40,
+    // Main body border
+    node.attr('body/stroke', '#d9d9d9');
+    node.attr('body/strokeWidth', 1);
+    node.attr('body/fill', '#ffffff');
+    
+    // Left background (key side) - grey
+    node.attr('key-bg', {
+      x: 1,
+      y: 1,
+      width: 108,
+      height: 38,
       fill: '#f5f5f5',
-      stroke: 'none'
+      stroke: 'none',
+      pointerEvents: 'none'
     });
     
+    // Right background (value side) - colored
+    node.attr('value-bg', {
+      x: 110,
+      y: 1,
+      width: 109,
+      height: 38,
+      fill: color,
+      opacity: 0.15,
+      stroke: 'none',
+      pointerEvents: 'none'
+    });
+    
+    // Divider line between key and value
+    node.attr('divider', {
+      x1: 110,
+      y1: 0,
+      x2: 110,
+      y2: 40,
+      stroke: '#d9d9d9',
+      strokeWidth: 1,
+      pointerEvents: 'none'
+    });
+    
+    // Key text - left side
     node.attr('key-text', {
       x: 55,
       y: 20,
       text: data.key,
-      fontSize: 13,
+      fontSize: 12,
       fill: '#595959',
       textAnchor: 'middle',
-      textVerticalAnchor: 'middle'
+      textVerticalAnchor: 'middle',
+      fontWeight: '500',
+      pointerEvents: 'none'
     });
     
-    // Value part (right side)
-    node.attr('value-part', {
-      x: 110,
-      y: 0,
-      width: 110,
-      height: 40,
-      fill: color,
-      stroke: 'none',
-      opacity: 0.3
-    });
-    
-    node.attr('value-icon', {
-      x: 120,
+    // Value text with icon - right side
+    const displayValue = valueText.length > 12 ? valueText.substring(0, 12) + '...' : valueText;
+    node.attr('value-text', {
+      x: 165,
       y: 20,
-      text: icon,
+      text: `${icon} ${displayValue}`,
       fontSize: 12,
       fill: '#262626',
-      textAnchor: 'start',
-      textVerticalAnchor: 'middle'
-    });
-    
-    node.attr('value-text', {
-      x: 140,
-      y: 20,
-      text: String(data.value),
-      fontSize: 13,
-      fill: '#262626',
-      textAnchor: 'start',
-      textVerticalAnchor: 'middle'
+      textAnchor: 'middle',
+      textVerticalAnchor: 'middle',
+      fontWeight: '500',
+      pointerEvents: 'none'
     });
   }
 }

@@ -92,10 +92,11 @@ export function convertToNode(
  * Infer type from input string
  */
 export function inferType(input: string): { value: any; type: NodeType } {
-  // Try to parse as number
-  const num = Number(input);
-  if (!isNaN(num) && input.trim() !== '') {
-    return { value: num, type: NodeType.NUMBER };
+  const trimmed = input.trim();
+
+  // Treat empty or whitespace-only strings as plain strings
+  if (trimmed === '') {
+    return { value: input, type: NodeType.STRING };
   }
 
   // Check boolean values
@@ -109,6 +110,12 @@ export function inferType(input: string): { value: any; type: NodeType } {
   // Check null
   if (input === 'null') {
     return { value: null, type: NodeType.NULL };
+  }
+
+  // Try to parse as number
+  const num = Number(input);
+  if (!isNaN(num) && trimmed !== '') {
+    return { value: num, type: NodeType.NUMBER };
   }
 
   // Default to string

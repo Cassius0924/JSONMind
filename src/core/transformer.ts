@@ -68,7 +68,7 @@ function createGraphNode(node: TreeNode, collapsed: boolean = false): any {
   return {
     id: node.id,
     shape: isContainer ? 'container-node' : 'split-node',
-    width: isContainer ? 120 : 200,
+    width: isContainer ? 120 : 220,
     height: isContainer ? 40 : 40,
     data: {
       ...node,

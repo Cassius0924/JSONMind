@@ -84,10 +84,10 @@ The built files will be in the `dist` directory.
 
 ### Technology Stack
 
-- **Frontend Framework**: React 19.2 + TypeScript 5.9
+- **Frontend Framework**: React + TypeScript 5.9
 - **State Management**: Zustand 4.4
 - **Graph Visualization**: AntV X6 2.18
-- **Build Tool**: Vite 7.x
+- **Build Tool**: Vite 5.x
 - **UI Components**: Ant Design 5.x
 
 ### Project Structure

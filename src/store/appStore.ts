@@ -34,39 +34,46 @@ export const useAppStore = create<AppState & AppActions>((set, get) => ({
   // Actions: Update tree from JSON text
   updateFromJson: (text: string) => {
     if (isUpdatingFromGraph) return;
-    isUpdatingFromEditor = true;
+    
+    try {
+      isUpdatingFromEditor = true;
 
-    const result = parseJsonToTree(text);
-    if (result.success && result.root) {
-      set({
-        jsonText: text,
-        rootNode: result.root,
-        isValid: true,
-        errorMessage: null
-      });
-    } else {
-      set({
-        isValid: false,
-        errorMessage: result.error || 'Invalid JSON'
-      });
+      const result = parseJsonToTree(text);
+      if (result.success && result.root) {
+        set({
+          jsonText: text,
+          rootNode: result.root,
+          isValid: true,
+          errorMessage: null
+        });
+      } else {
+        set({
+          jsonText: text,  // Update text even on failure to maintain consistency
+          isValid: false,
+          errorMessage: result.error || 'Invalid JSON'
+        });
+      }
+    } finally {
+      isUpdatingFromEditor = false;
     }
-
-    isUpdatingFromEditor = false;
   },
 
   // Actions: Sync tree to JSON text
   syncToJson: () => {
     if (isUpdatingFromEditor) return;
-    isUpdatingFromGraph = true;
+    
+    try {
+      isUpdatingFromGraph = true;
 
-    const { rootNode } = get();
-    if (rootNode) {
-      const json = treeToJson(rootNode);
-      const text = JSON.stringify(json, null, 2);
-      set({ jsonText: text, isValid: true, errorMessage: null });
+      const { rootNode } = get();
+      if (rootNode) {
+        const json = treeToJson(rootNode);
+        const text = JSON.stringify(json, null, 2);
+        set({ jsonText: text, isValid: true, errorMessage: null });
+      }
+    } finally {
+      isUpdatingFromGraph = false;
     }
-
-    isUpdatingFromGraph = false;
   },
 
   // Actions: Set root node

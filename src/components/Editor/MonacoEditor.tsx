@@ -1,29 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useAppStore } from '../../store/appStore';
 import { debounce } from '../../utils/debounce';
 
-const MonacoEditor: React.FC = () => {
+const JsonEditor: React.FC = () => {
   const { jsonText, isValid, errorMessage, updateFromJson } = useAppStore();
   const [localText, setLocalText] = useState(jsonText);
 
   useEffect(() => {
     // Initialize with default JSON
     updateFromJson(jsonText);
-  }, []);
+  }, [updateFromJson, jsonText]);
 
   useEffect(() => {
     setLocalText(jsonText);
   }, [jsonText]);
 
-  const debouncedUpdate = React.useRef(debounce(updateFromJson, 300)).current;
+  const debouncedUpdate = useMemo(
+    () => debounce(updateFromJson, 300),
+    [updateFromJson]
+  );
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setLocalText(value);
     debouncedUpdate(value);
-  };
+  }, [debouncedUpdate]);
 
-  const handleFormat = () => {
+  const handleFormat = useCallback(() => {
     try {
       const parsed = JSON.parse(localText);
       const formatted = JSON.stringify(parsed, null, 2);
@@ -32,7 +35,7 @@ const MonacoEditor: React.FC = () => {
     } catch (error) {
       console.error('Cannot format invalid JSON');
     }
-  };
+  }, [localText, updateFromJson]);
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -46,6 +49,7 @@ const MonacoEditor: React.FC = () => {
         <button 
           onClick={handleFormat}
           disabled={!isValid}
+          aria-label="Format JSON"
           style={{
             padding: '6px 12px',
             cursor: isValid ? 'pointer' : 'not-allowed',
@@ -71,6 +75,7 @@ const MonacoEditor: React.FC = () => {
         <textarea
           value={localText}
           onChange={handleTextChange}
+          aria-label="JSON input"
           style={{
             width: '100%',
             height: '100%',
@@ -89,4 +94,4 @@ const MonacoEditor: React.FC = () => {
   );
 };
 
-export default MonacoEditor;
+export default JsonEditor;

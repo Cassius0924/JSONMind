@@ -1,5 +1,5 @@
 import React from 'react';
-import MonacoEditor from '../Editor/MonacoEditor';
+import JsonEditor from '../Editor/MonacoEditor';
 import GraphCanvas from '../MindMap/GraphCanvas';
 import './MainLayout.css';
 
@@ -13,7 +13,7 @@ const MainLayout: React.FC = () => {
       <div className="content">
         <div className="editor-panel">
           <h3 className="panel-title">JSON Editor</h3>
-          <MonacoEditor />
+          <JsonEditor />
         </div>
         <div className="divider" />
         <div className="canvas-panel">
