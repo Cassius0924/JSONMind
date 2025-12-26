@@ -1,27 +1,33 @@
-import React, { useEffect, useRef } from 'react';
-import Editor from '@monaco-editor/react';
+import React, { useEffect, useState } from 'react';
 import { useAppStore } from '../../store/appStore';
 import { debounce } from '../../utils/debounce';
 
 const MonacoEditor: React.FC = () => {
   const { jsonText, isValid, errorMessage, updateFromJson } = useAppStore();
-  const debouncedUpdateRef = useRef(debounce(updateFromJson, 300));
+  const [localText, setLocalText] = useState(jsonText);
 
   useEffect(() => {
     // Initialize with default JSON
     updateFromJson(jsonText);
   }, []);
 
-  const handleEditorChange = (value: string | undefined) => {
-    if (value !== undefined) {
-      debouncedUpdateRef.current(value);
-    }
+  useEffect(() => {
+    setLocalText(jsonText);
+  }, [jsonText]);
+
+  const debouncedUpdate = React.useRef(debounce(updateFromJson, 300)).current;
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setLocalText(value);
+    debouncedUpdate(value);
   };
 
   const handleFormat = () => {
     try {
-      const parsed = JSON.parse(jsonText);
+      const parsed = JSON.parse(localText);
       const formatted = JSON.stringify(parsed, null, 2);
+      setLocalText(formatted);
       updateFromJson(formatted);
     } catch (error) {
       console.error('Cannot format invalid JSON');
@@ -55,23 +61,28 @@ const MonacoEditor: React.FC = () => {
             {errorMessage}
           </span>
         )}
+        {isValid && (
+          <span style={{ color: '#52c41a', fontSize: '12px' }}>
+            ✓ Valid JSON
+          </span>
+        )}
       </div>
-      <div style={{ flex: 1 }}>
-        <Editor
-          height="100%"
-          defaultLanguage="json"
-          value={jsonText}
-          onChange={handleEditorChange}
-          theme="vs-light"
-          options={{
-            minimap: { enabled: false },
-            fontSize: 14,
-            lineNumbers: 'on',
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-            formatOnPaste: true,
-            formatOnType: true
+      <div style={{ flex: 1, padding: '10px' }}>
+        <textarea
+          value={localText}
+          onChange={handleTextChange}
+          style={{
+            width: '100%',
+            height: '100%',
+            fontFamily: 'monospace',
+            fontSize: '14px',
+            padding: '10px',
+            border: `1px solid ${isValid ? '#d9d9d9' : '#ff4d4f'}`,
+            borderRadius: '4px',
+            resize: 'none',
+            outline: 'none'
           }}
+          spellCheck={false}
         />
       </div>
     </div>
