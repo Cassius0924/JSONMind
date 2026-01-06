@@ -106,7 +106,7 @@ export const ContainerNode = memo(({ data }: NodeProps) => {
       )}
 
       <div className={clsx(
-        "flex items-center rounded-lg shadow-sm px-3 py-2 text-sm transition-smooth-300 cursor-pointer",
+        "flex items-center rounded-lg shadow-sm px-3 py-2 text-sm transition-shadow duration-200 ease-out cursor-pointer",
         NODE_STYLES.maxWidthContainer,
         containerClass,
         isSelected 

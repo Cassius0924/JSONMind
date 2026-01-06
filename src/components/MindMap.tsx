@@ -16,7 +16,8 @@ import { SplitNode } from './nodes/SplitNode';
 import { ContainerNode } from './nodes/ContainerNode';
 import { ContextMenu } from './ContextMenu';
 import { AddNodeModal } from './AddNodeModal';
-import { Image as ImageIcon, Maximize2, Minimize2, Copy } from 'lucide-react';
+import { HelpModal } from './HelpModal';
+import { Image as ImageIcon, Maximize2, Minimize2, Copy, HelpCircle } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import { saveAs } from 'file-saver';
 
@@ -32,6 +33,7 @@ export const MindMap: React.FC<{ isFullscreen: boolean; setIsFullscreen: (val: b
   const { getViewport } = useReactFlow();
   
   const [menu, setMenu] = useState<{ x: number; y: number; targetType: 'canvas' | 'node'; targetNode?: Node } | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
   const [modal, setModal] = useState<{ type: 'string' | 'number' | 'boolean' | 'object' | 'array'; parentType?: 'array' | 'object'; targetPath: string[]; useMemory?: boolean } | null>(null);
 
   useEffect(() => {
@@ -281,6 +283,14 @@ export const MindMap: React.FC<{ isFullscreen: boolean; setIsFullscreen: (val: b
             {isFullscreen ? <Minimize2 size={18} strokeWidth={2} /> : <Maximize2 size={18} strokeWidth={2} />}
           </button>
           <button 
+            onClick={() => setShowHelp(true)}
+            className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg shadow-md hover:shadow-lg hover:bg-slate-50 text-sm font-medium text-slate-700 transition-smooth cursor-pointer"
+            title="Help & Usage Guide"
+            aria-label="Open help"
+          >
+            <HelpCircle size={18} strokeWidth={2} />
+          </button>
+          <button 
             onClick={onExportImage}
             className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg shadow-md hover:shadow-lg hover:bg-slate-50 text-sm font-medium text-slate-700 transition-smooth cursor-pointer"
             title="Export visualization as PNG"
@@ -323,6 +333,9 @@ export const MindMap: React.FC<{ isFullscreen: boolean; setIsFullscreen: (val: b
             onSetNull={handleSetNull}
             onCopyPath={handleCopyPath}
           />
+        )}
+        {showHelp && (
+          <HelpModal onClose={() => setShowHelp(false)} />
         )}
         {modal && (
           <AddNodeModal

@@ -1,3 +1,4 @@
 node_modules
 .github/prompts/
 .shared/
+dist/

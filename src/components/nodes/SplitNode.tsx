@@ -163,7 +163,7 @@ export const SplitNode = memo(({ data }: NodeProps) => {
       )}
 
       <div className={clsx(
-        "flex items-stretch border rounded-lg shadow-sm bg-white overflow-hidden text-sm transition-smooth-300 cursor-pointer",
+        "flex items-stretch border rounded-lg shadow-sm bg-white overflow-hidden text-sm transition-shadow duration-200 ease-out cursor-pointer",
         NODE_STYLES.maxWidthSplit,
         isSelected 
           ? "border-primary-600 border-2 shadow-lg ring-2 ring-primary-100" 
