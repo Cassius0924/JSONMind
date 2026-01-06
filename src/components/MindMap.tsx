@@ -217,13 +217,15 @@ export const MindMap: React.FC<{ isFullscreen: boolean; setIsFullscreen: (val: b
   const formatJsonPath = (path: string[]): string => {
     const actualPath = path.slice(1); // Remove 'root'
     if (actualPath.length === 0) return '$';
-    return '$.' + actualPath.map(p => {
-      // If path segment contains special characters or is numeric, use bracket notation
-      if (/^[0-9]+$/.test(p) || /[^a-zA-Z0-9_]/.test(p)) {
-        return `["${p}"]`;
+    return actualPath.reduce((acc, segment) => {
+      if (/^[0-9]+$/.test(segment)) {
+        return `${acc}[${segment}]`;
       }
-      return p;
-    }).join('.');
+      if (/[^a-zA-Z0-9_]/.test(segment)) {
+        return `${acc}["${segment}"]`;
+      }
+      return `${acc}.${segment}`;
+    }, '$');
   };
 
   const handleCopyPath = () => {
@@ -242,7 +244,7 @@ export const MindMap: React.FC<{ isFullscreen: boolean; setIsFullscreen: (val: b
   };
 
   return (
-    <div className="h-full w-full bg-gray-50 relative">
+    <div className="h-full w-full bg-slate-50 relative">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -264,40 +266,44 @@ export const MindMap: React.FC<{ isFullscreen: boolean; setIsFullscreen: (val: b
         onPaneClick={onPaneClick}
         defaultEdgeOptions={{
           type: 'default', // Bezier
-          style: { stroke: '#b1b1b7', strokeWidth: 2 },
+          style: { stroke: '#cbd5e1', strokeWidth: 2.5 },
         }}
       >
-        <Background color="#e5e7eb" gap={16} />
+        <Background color="#e2e8f0" gap={20} />
         <Controls />
         <Panel position="top-right" className="flex gap-2">
           <button 
             onClick={() => setIsFullscreen(!isFullscreen)}
-            className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded shadow-sm hover:bg-gray-50 text-sm font-medium text-gray-700"
+            className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg shadow-md hover:shadow-lg hover:bg-slate-50 text-sm font-medium text-slate-700 transition-smooth cursor-pointer"
             title={isFullscreen ? 'Exit Fullscreen (F11)' : 'Fullscreen (F11)'}
+            aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
           >
-            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+            {isFullscreen ? <Minimize2 size={18} strokeWidth={2} /> : <Maximize2 size={18} strokeWidth={2} />}
           </button>
           <button 
             onClick={onExportImage}
-            className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded shadow-sm hover:bg-gray-50 text-sm font-medium text-gray-700"
+            className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg shadow-md hover:shadow-lg hover:bg-slate-50 text-sm font-medium text-slate-700 transition-smooth cursor-pointer"
+            title="Export visualization as PNG"
+            aria-label="Export as image"
           >
-            <ImageIcon size={16} />
-            Export Image
+            <ImageIcon size={18} strokeWidth={2} />
+            Export
           </button>
         </Panel>
         {(selectedPath || hoveredPath) && (
-          <Panel position="bottom-center" className="bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-sm border border-gray-200 text-xs font-mono text-gray-600 mb-4">
+          <Panel position="bottom-center" className="bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-full shadow-lg border border-slate-200 text-xs font-mono text-slate-600 mb-4">
             {selectedPath ? (
               <span className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                <span className="font-semibold text-blue-600">Selected:</span>
+                <span className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></span>
+                <span className="font-semibold text-primary-600">Selected:</span>
                 {formatJsonPath(selectedPath)}
                 <button
                   onClick={handleCopySelectedPath}
-                  className="ml-2 p-1 hover:bg-blue-100 rounded transition-colors"
+                  className="ml-2 p-1 hover:bg-primary-100 rounded transition-smooth cursor-pointer"
                   title="Copy JSON Path"
+                  aria-label="Copy path"
                 >
-                  <Copy size={12} className="text-blue-600" />
+                  <Copy size={14} className="text-primary-600" strokeWidth={2} />
                 </button>
               </span>
             ) : (

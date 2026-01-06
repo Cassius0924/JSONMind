@@ -84,40 +84,44 @@ export const ContainerNode = memo(({ data }: NodeProps) => {
     >
       {/* Action Buttons */}
       {showActions && (
-        <div className="absolute -top-8 right-0 flex gap-1 bg-white border border-gray-200 rounded shadow-sm p-1 z-10">
+        <div className="absolute -top-8 right-0 flex gap-1 bg-white border border-slate-200 rounded-md shadow-md p-1.5 z-10 backdrop-blur-sm">
           <button 
             ref={addButtonRef}
             onClick={handleAddChild}
-            className="p-1 hover:bg-blue-50 text-blue-500 rounded"
-            title="Add Child"
+            className="p-1.5 hover:bg-primary-100 text-primary-600 rounded transition-smooth cursor-pointer"
+            title="Add Child (Double-click node or press Tab)"
+            aria-label="Add child node"
           >
-            <Plus size={14} />
+            <Plus size={14} strokeWidth={2.5} />
           </button>
           <button 
             onClick={handleDelete}
-            className="p-1 hover:bg-red-50 text-red-500 rounded"
-            title="Delete Node"
+            className="p-1.5 hover:bg-red-100 text-red-600 rounded transition-smooth cursor-pointer"
+            title="Delete Node (Press Delete)"
+            aria-label="Delete node"
           >
-            <Trash2 size={14} />
+            <Trash2 size={14} strokeWidth={2.5} />
           </button>
         </div>
       )}
 
       <div className={clsx(
-        "flex items-center rounded shadow-sm px-3 py-2 text-sm transition-all",
+        "flex items-center rounded-lg shadow-sm px-3 py-2 text-sm transition-smooth-300 cursor-pointer",
         NODE_STYLES.maxWidthContainer,
         containerClass,
-        isSelected ? "border-2 border-blue-500 shadow-lg ring-2 ring-blue-200" : "border"
+        isSelected 
+          ? "border-2 border-primary-600 shadow-lg ring-2 ring-primary-100" 
+          : "border hover:shadow-md"
       )}>
-        <Handle type="target" position={Position.Left} className="!bg-gray-400" />
+        <Handle type="target" position={Position.Left} className="!bg-slate-400" />
         
-        <div className="mr-2 text-gray-500 shrink-0">
-          {isArray ? <Brackets size={14} /> : <Braces size={14} />}
+        <div className="mr-2 text-slate-600 shrink-0">
+          {isArray ? <Brackets size={16} strokeWidth={2} /> : <Braces size={16} strokeWidth={2} />}
         </div>
         
         <div 
           ref={keyDisplayRef}
-          className={clsx("font-medium text-gray-700 cursor-text nodrag nopan break-words whitespace-normal transition-all duration-150", NODE_STYLES.minWidthKey)}
+          className={clsx("font-semibold text-slate-700 cursor-text nodrag nopan break-words whitespace-normal transition-all duration-150", NODE_STYLES.minWidthKey)}
           style={editWidth ? { minWidth: editWidth, width: editWidth } : undefined}
           onDoubleClick={(e) => { e.stopPropagation(); startEditingKey(); }}
           onMouseDown={(e) => e.stopPropagation()}
@@ -139,7 +143,7 @@ export const ContainerNode = memo(({ data }: NodeProps) => {
                   setEditWidth(null);
                 }
               }}
-              className="w-full bg-transparent outline-none border-b-2 border-blue-400 nodrag nopan resize-none overflow-hidden"
+              className="w-full bg-transparent outline-none border-b-2 border-primary-500 nodrag nopan resize-none overflow-hidden font-semibold"
               rows={1}
               onMouseDown={(e) => e.stopPropagation()}
             />
@@ -148,7 +152,7 @@ export const ContainerNode = memo(({ data }: NodeProps) => {
           )}
         </div>
 
-        <Handle type="source" position={Position.Right} className="!bg-gray-400" />
+        <Handle type="source" position={Position.Right} className="!bg-slate-400" />
       </div>
     </div>
   );

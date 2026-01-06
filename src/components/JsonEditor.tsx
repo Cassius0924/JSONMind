@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import Editor, { OnMount, useMonaco } from '@monaco-editor/react';
 import { useJsonStore } from '../store/useJsonStore';
-import { Braces, AlertCircle } from 'lucide-react';
+import { Braces, AlertCircle, Check } from 'lucide-react';
 import { findPathRange } from '../utils/jsonParser';
 
 export const JsonEditor: React.FC = () => {
@@ -35,8 +35,8 @@ export const JsonEditor: React.FC = () => {
               range: new monaco.Range(startPos.lineNumber, startPos.column, endPos.lineNumber, endPos.column),
               options: {
                 isWholeLine: false,
-                className: 'bg-yellow-100 border border-yellow-300 rounded',
-                inlineClassName: 'bg-yellow-100',
+                className: 'bg-amber-100 border border-amber-300 rounded',
+                inlineClassName: 'bg-amber-100',
               },
             },
           ];
@@ -62,23 +62,31 @@ export const JsonEditor: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200">
+    <div className="flex flex-col h-full border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-gray-700">JSON Input</span>
+          <Braces size={18} className="text-slate-600" strokeWidth={2.5} />
+          <span className="font-semibold text-slate-700 font-heading">JSON Input</span>
+          {isValid && (
+            <span className="flex items-center text-xs text-emerald-600 gap-1 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              <Check size={12} strokeWidth={3} />
+              Valid
+            </span>
+          )}
           {!isValid && (
-            <span className="flex items-center text-xs text-red-500 gap-1 bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
-              <AlertCircle size={12} />
+            <span className="flex items-center text-xs text-red-600 gap-1 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
+              <AlertCircle size={12} strokeWidth={2.5} />
               Invalid JSON
             </span>
           )}
         </div>
         <button
           onClick={handleFormat}
-          className="p-1.5 text-gray-600 hover:bg-gray-200 rounded transition-colors"
-          title="Format JSON"
+          className="p-1.5 text-slate-600 hover:bg-slate-200 hover:text-slate-800 rounded transition-smooth"
+          title="Format JSON (Ctrl+Shift+F)"
+          aria-label="Format JSON"
         >
-          <Braces size={18} />
+          <Braces size={18} strokeWidth={2} />
         </button>
       </div>
       
@@ -91,19 +99,24 @@ export const JsonEditor: React.FC = () => {
           onMount={handleEditorDidMount}
           options={{
             minimap: { enabled: false },
-            fontSize: 14,
+            fontSize: 13,
+            lineHeight: 1.6,
             scrollBeyondLastLine: false,
             wordWrap: 'on',
             automaticLayout: true,
             formatOnPaste: true,
             formatOnType: true,
+            cursorStyle: 'line',
+            cursorSmoothCaretAnimation: 'on',
+            smoothScrolling: true,
           }}
+          theme="light"
         />
       </div>
       
       {!isValid && error && (
-        <div className="px-4 py-2 bg-red-50 border-t border-red-100 text-xs text-red-600 truncate">
-          {error}
+        <div className="px-4 py-2 bg-red-50 border-t border-red-200 text-xs text-red-700 truncate font-mono">
+          Error: {error}
         </div>
       )}
     </div>

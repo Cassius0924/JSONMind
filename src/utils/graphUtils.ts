@@ -1,8 +1,37 @@
 import dagre from 'dagre';
 import { Node, Edge, Position } from 'reactflow';
 
-const NODE_WIDTH = 200; 
-const NODE_HEIGHT = 40;
+// Dagre needs a rough size hint to avoid node/edge overlap. The actual React
+// nodes are wider/taller than the previous 200x40 guess, so we estimate a more
+// realistic bounding box based on node type and value length.
+const MIN_NODE_WIDTH = 180;
+const CONTAINER_NODE_WIDTH = 260;
+const SPLIT_NODE_WIDTH = 340;
+const MAX_NODE_WIDTH = 420;
+const BASE_NODE_HEIGHT = 56;
+const PER_LINE_HEIGHT = 18;
+const AVG_CHARS_PER_LINE = 28;
+const MAX_NODE_HEIGHT = 140;
+
+const estimateNodeSize = (node: Node) => {
+  const isContainer = node.type === 'container';
+  const width = Math.max(
+    MIN_NODE_WIDTH,
+    Math.min(MAX_NODE_WIDTH, isContainer ? CONTAINER_NODE_WIDTH : SPLIT_NODE_WIDTH)
+  );
+
+  // Split nodes render the value and can grow vertically when wrapped. Use a
+  // simple character-based heuristic to give Dagre extra vertical space.
+  let height = BASE_NODE_HEIGHT;
+  if (!isContainer) {
+    const rawValue = node.data?.value;
+    const serialized = rawValue === null ? 'null' : typeof rawValue === 'string' ? rawValue : JSON.stringify(rawValue);
+    const estimatedLines = Math.max(1, Math.ceil(serialized.length / AVG_CHARS_PER_LINE));
+    height = Math.min(MAX_NODE_HEIGHT, BASE_NODE_HEIGHT + (estimatedLines - 1) * PER_LINE_HEIGHT);
+  }
+
+  return { width, height };
+};
 
 export const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'LR') => {
   const dagreGraph = new dagre.graphlib.Graph();
@@ -10,12 +39,13 @@ export const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'L
 
   dagreGraph.setGraph({ 
     rankdir: direction,
-    ranksep: 120, 
-    nodesep: 50   
+    ranksep: 80, 
+    nodesep: 60   
   });
 
   nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
+    const { width, height } = estimateNodeSize(node);
+    dagreGraph.setNode(node.id, { width, height });
   });
 
   edges.forEach((edge) => {
@@ -32,8 +62,8 @@ export const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'L
     // We are shifting the dagre node position (anchor=center center) to the top left
     // so it matches the React Flow node anchor point (top left).
     node.position = {
-      x: nodeWithPosition.x - NODE_WIDTH / 2,
-      y: nodeWithPosition.y - NODE_HEIGHT / 2,
+      x: nodeWithPosition.x - (estimateNodeSize(node).width / 2),
+      y: nodeWithPosition.y - (estimateNodeSize(node).height / 2),
     };
 
     return node;

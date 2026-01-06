@@ -7,9 +7,9 @@ function App() {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   return (
-    <div className="flex h-screen w-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen w-screen bg-slate-50 overflow-hidden">
       {!isFullscreen && (
-        <div className="w-1/3 h-full border-r border-gray-200 p-4 flex flex-col">
+        <div className="w-1/3 h-full border-r border-slate-200 p-4 flex flex-col bg-white shadow-sm">
           <JsonEditor />
         </div>
       )}

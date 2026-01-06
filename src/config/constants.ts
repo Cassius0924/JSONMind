@@ -5,12 +5,13 @@ export const NODE_STYLES = {
   minWidthValue: 'min-w-[80px]',
 };
 
+// Updated color palette with better contrast and visual hierarchy
 export const TYPE_COLORS = {
-  string: 'bg-green-100 text-green-800 border-green-200',
-  number: 'bg-blue-100 text-blue-800 border-blue-200',
-  boolean: 'bg-orange-100 text-orange-800 border-orange-200',
-  null: 'bg-gray-100 text-gray-800 border-gray-200',
-  object: 'bg-purple-50 border-purple-200 text-gray-600',
-  array: 'bg-indigo-50 border-indigo-200 text-gray-600',
-  default: 'bg-gray-50 text-gray-600 border-gray-200',
+  string: 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100',
+  number: 'bg-sky-50 text-sky-700 border-sky-300 hover:bg-sky-100',
+  boolean: 'bg-amber-50 text-amber-700 border-amber-300 hover:bg-amber-100',
+  null: 'bg-slate-100 text-slate-600 border-slate-300 hover:bg-slate-200',
+  object: 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50',
+  array: 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50',
+  default: 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100',
 };

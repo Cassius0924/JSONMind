@@ -134,10 +134,10 @@ export const SplitNode = memo(({ data }: NodeProps) => {
 
   const renderTypeIcon = () => {
     switch (type) {
-      case 'string': return <Type size={12} className="text-green-600 opacity-50" />;
-      case 'number': return <Hash size={12} className="text-blue-600 opacity-50" />;
-      case 'boolean': return <ToggleLeft size={12} className="text-orange-600 opacity-50" />;
-      case 'null': return <Ban size={12} className="text-gray-500 opacity-50" />;
+      case 'string': return <Type size={14} className="text-emerald-600" strokeWidth={2} />;
+      case 'number': return <Hash size={14} className="text-sky-600" strokeWidth={2} />;
+      case 'boolean': return <ToggleLeft size={14} className="text-amber-600" strokeWidth={2} />;
+      case 'null': return <Ban size={14} className="text-slate-500" strokeWidth={2} />;
       default: return null;
     }
   };
@@ -150,28 +150,31 @@ export const SplitNode = memo(({ data }: NodeProps) => {
     >
       {/* Action Buttons */}
       {showActions && (
-        <div className="absolute -top-8 right-0 flex gap-1 bg-white border border-gray-200 rounded shadow-sm p-1 z-10">
+        <div className="absolute -top-8 right-0 flex gap-1 bg-white border border-slate-200 rounded-md shadow-md p-1.5 z-10 backdrop-blur-sm">
           <button 
             onClick={handleDelete}
-            className="p-1 hover:bg-red-50 text-red-500 rounded"
-            title="Delete Node"
+            className="p-1.5 hover:bg-red-100 text-red-600 rounded transition-smooth cursor-pointer"
+            title="Delete Node (Press Delete)"
+            aria-label="Delete node"
           >
-            <Trash2 size={14} />
+            <Trash2 size={14} strokeWidth={2.5} />
           </button>
         </div>
       )}
 
       <div className={clsx(
-        "flex items-stretch border rounded shadow-sm bg-white overflow-hidden text-sm transition-all",
+        "flex items-stretch border rounded-lg shadow-sm bg-white overflow-hidden text-sm transition-smooth-300 cursor-pointer",
         NODE_STYLES.maxWidthSplit,
-        isSelected ? "border-blue-500 border-2 shadow-lg ring-2 ring-blue-200" : "border-gray-300"
+        isSelected 
+          ? "border-primary-600 border-2 shadow-lg ring-2 ring-primary-100" 
+          : "border-slate-200 hover:shadow-md"
       )}>
-        <Handle type="target" position={Position.Left} className="!bg-gray-400" />
+        <Handle type="target" position={Position.Left} className="!bg-slate-400" />
         
         {/* Key Section */}
         <div 
           ref={keyDisplayRef}
-          className={clsx("px-3 py-2 bg-gray-50 border-r border-gray-200 font-medium text-gray-700 flex items-center cursor-text nodrag nopan break-words whitespace-normal transition-all duration-150", NODE_STYLES.minWidthKey)}
+          className={clsx("px-3 py-2 bg-slate-50 border-r border-slate-200 font-semibold text-slate-700 flex items-center cursor-text nodrag nopan break-words whitespace-normal transition-all duration-150", NODE_STYLES.minWidthKey)}
           style={keyEditWidth ? { minWidth: keyEditWidth, width: keyEditWidth } : undefined}
           onDoubleClick={(e) => { 
             e.stopPropagation(); 
@@ -196,7 +199,7 @@ export const SplitNode = memo(({ data }: NodeProps) => {
                   setKeyEditWidth(null);
                 }
               }}
-              className="w-full bg-transparent outline-none border-b-2 border-blue-400 nodrag nopan resize-none overflow-hidden"
+              className="w-full bg-transparent outline-none border-b-2 border-primary-500 nodrag nopan resize-none overflow-hidden font-semibold"
               rows={1}
               onMouseDown={(e) => e.stopPropagation()}
             />
@@ -208,7 +211,7 @@ export const SplitNode = memo(({ data }: NodeProps) => {
         {/* Value Section */}
         <div 
           ref={valueDisplayRef}
-          className={clsx("px-3 py-2 flex-1 font-mono flex items-center gap-2 cursor-text nodrag nopan break-words whitespace-normal transition-all duration-150", NODE_STYLES.minWidthValue, valueColorClass)}
+          className={clsx("px-3 py-2 flex-1 font-mono text-sm flex items-center gap-2 cursor-text nodrag nopan break-words whitespace-normal transition-all duration-150", NODE_STYLES.minWidthValue, valueColorClass)}
           style={valueEditWidth ? { minWidth: valueEditWidth, width: valueEditWidth } : undefined}
           onDoubleClick={(e) => {
             e.stopPropagation();
@@ -238,7 +241,7 @@ export const SplitNode = memo(({ data }: NodeProps) => {
                   setValueEditWidth(null);
                 }
               }}
-              className="w-full bg-transparent outline-none border-b-2 border-blue-400 nodrag nopan resize-none overflow-hidden"
+              className="w-full bg-transparent outline-none border-b-2 border-primary-500 nodrag nopan resize-none overflow-hidden font-mono"
               rows={1}
               onMouseDown={(e) => e.stopPropagation()}
               placeholder={type === 'null' ? 'Enter value (auto-detect type)' : ''}
@@ -250,21 +253,22 @@ export const SplitNode = memo(({ data }: NodeProps) => {
                         type="checkbox" 
                         checked={value} 
                         onChange={handleBooleanToggle}
-                        className="nodrag nopan cursor-pointer w-4 h-4 text-orange-600 rounded focus:ring-orange-500"
+                        className="nodrag nopan cursor-pointer w-4 h-4 text-amber-600 rounded focus:ring-amber-500"
                         onMouseDown={(e) => e.stopPropagation()}
                     />
-                    <span>{String(value)}</span>
+                    <span className="font-semibold">{String(value)}</span>
                 </div>
             ) : type === 'null' ? (
-                <span className="break-all italic text-gray-400">{String(value)} <span className="text-xs">(double-click to edit)</span></span>
+                <span className="break-all italic text-slate-400">{String(value)}</span>
             ) : (
                 <span className="break-all">{String(value)}</span>
             )
           )}
         </div>
 
-        <Handle type="source" position={Position.Right} className="!bg-gray-400" />
+        <Handle type="source" position={Position.Right} className="!bg-slate-400" />
       </div>
     </div>
   );
 });
+ 
