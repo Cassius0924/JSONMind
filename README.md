@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧠 JSONMind
+# JSONMind
 
 **将 JSON 数据实时可视化为思维导图**
 
@@ -14,84 +14,50 @@
 
 ---
 
-## ✨ 简介
+## 简介
 
 **JSONMind** 是一款基于浏览器的 JSON 可视化工具，能够将 JSON 数据实时渲染为交互式思维导图。左侧内置了 Monaco 代码编辑器，右侧是可交互的节点图，二者双向联动——编辑 JSON 文本时思维导图实时更新，悬停或选中思维导图节点时编辑器同步高亮对应代码片段。
 
 > 无需安装，打开浏览器即可使用。
 
----
+<div align="center">
 
-## 🖼️ 界面预览
+  **快速体验：[jsonmind.cassdev.com](https://jsonmind.cassdev.com)**
+  
+</div>
 
-```
-┌─────────────────────┬────────────────────────────────────────┐
-│                     │                                        │
-│   JSON 编辑器        │           思维导图画布                  │
-│  (Monaco Editor)    │         (ReactFlow + Dagre)            │
-│                     │                                        │
-│  实时语法校验        │  ┌──────┐   ┌────────┐  ┌──────────┐  │
-│  格式化支持          │  │ Root │──▶│features│─▶│  item 0  │  │
-│  代码高亮            │  └──────┘   └────────┘  └──────────┘  │
-│                     │                                        │
-└─────────────────────┴────────────────────────────────────────┘
-```
+## 界面预览
 
----
+<img width="4350" height="2344" alt="jsonmind-site-preview" src="https://github.com/user-attachments/assets/0601719a-761a-4b83-bf7a-efa40771940b" />
 
-## 🚀 功能特性
 
-### 📊 实时可视化
+## 功能特性
+
+### 实时可视化
 - 输入/粘贴 JSON 后**即时渲染**为层级思维导图
 - 支持任意深度嵌套的对象与数组
 - 使用 **Dagre** 算法自动计算布局，整洁美观
 
-### 🔗 双向绑定
+### 双向绑定
 - 编辑器与思维导图**实时联动**
 - 鼠标悬停节点 → 编辑器自动**高亮**对应 JSON 片段并滚动到视图
 - 点击节点 → 编辑器持续高亮该路径
 
-### ✏️ 可视化编辑
+### 可视化编辑
 - **右键菜单**：添加子节点、删除节点、设为 null、复制 JSON 路径
 - **双击节点**：行内编辑节点值或重命名键名
 - **`+` 按钮**：点击容器节点旁的快捷按钮添加子节点
 - 支持添加 `string`、`number`、`boolean`、`object`、`array` 五种类型
 
-### ↩️ 撤销 / 重做
-- 完整的操作历史，支持最多 **50 步**撤销
-- 基于 [zundo](https://github.com/charkour/zundo) 实现精细化状态管理
-
-### 🖼️ 导出图片
+### 导出图片
 - 一键将当前思维导图导出为 **PNG 图片**
 - 自动截取画布全部内容，无需手动滚动
 
-### 🔍 JSON 路径
+### JSON 路径
 - 底部状态栏实时显示当前选中节点的 **JSON Path**（如 `$.author.name`）
 - 支持一键**复制**路径到剪贴板
 
-### ⌨️ 丰富快捷键
-- 全键盘操作支持，详见[快捷键](#️-快捷键)章节
-
----
-
-## 🛠️ 技术栈
-
-| 技术 | 用途 |
-|------|------|
-| [React 18](https://react.dev/) | UI 框架 |
-| [TypeScript 5](https://www.typescriptlang.org/) | 类型安全 |
-| [Vite 5](https://vitejs.dev/) | 构建工具 |
-| [Tailwind CSS 3](https://tailwindcss.com/) | 样式系统 |
-| [ReactFlow](https://reactflow.dev/) | 思维导图渲染引擎 |
-| [Monaco Editor](https://microsoft.github.io/monaco-editor/) | 代码编辑器（VS Code 同款） |
-| [Dagre](https://github.com/dagrejs/dagre) | 有向图自动布局算法 |
-| [Zustand](https://zustand-demo.pmnd.rs/) + [zundo](https://github.com/charkour/zundo) | 状态管理 + 撤销历史 |
-| [html-to-image](https://github.com/bubkoo/html-to-image) | 导出 PNG |
-| [lucide-react](https://lucide.dev/) | 图标库 |
-
----
-
-## 📦 快速开始
+## 快速开始
 
 ### 环境要求
 
@@ -122,9 +88,7 @@ npm run build
 npm run preview  # 预览构建结果
 ```
 
----
-
-## 📖 使用说明
+## 使用说明
 
 ### 1. 输入 JSON
 
@@ -150,13 +114,11 @@ npm run preview  # 预览构建结果
 
 | 图标样式 | 节点类型 |
 |---------|---------|
-| 灰色边框 | 🗂️ 对象 (Object) |
-| 灰色边框 | 📋 数组 (Array) |
-| 绿色边框 | 🔤 字符串 (String) |
-| 蓝色边框 | 🔢 数字 (Number) |
-| 黄色边框 | 🔘 布尔值 (Boolean) |
-
----
+| 灰色边框 | 对象 (Object) |
+| 灰色边框 | 数组 (Array) |
+| 绿色边框 | 字符串 (String) |
+| 蓝色边框 | 数字 (Number) |
+| 黄色边框 | 布尔值 (Boolean) |
 
 ## ⌨️ 快捷键
 
@@ -171,41 +133,7 @@ npm run preview  # 预览构建结果
 
 > **注意**：除编辑器内的格式化快捷键外，其余快捷键在文本输入框聚焦时不生效。
 
----
-
-## 📁 项目结构
-
-```
-JSONMind/
-├── src/
-│   ├── components/
-│   │   ├── nodes/
-│   │   │   ├── ContainerNode.tsx   # Object/Array 节点
-│   │   │   └── SplitNode.tsx       # 叶子节点（string/number/boolean/null）
-│   │   ├── AddNodeModal.tsx        # 添加节点弹窗
-│   │   ├── ContextMenu.tsx         # 右键菜单
-│   │   ├── HelpModal.tsx           # 帮助说明弹窗
-│   │   ├── JsonEditor.tsx          # Monaco 代码编辑器
-│   │   └── MindMap.tsx             # 思维导图主画布
-│   ├── config/
-│   │   └── constants.ts            # 全局常量
-│   ├── store/
-│   │   └── useJsonStore.ts         # Zustand 状态管理
-│   ├── utils/
-│   │   ├── graphUtils.ts           # JSON → 图节点转换 & Dagre 布局
-│   │   └── jsonParser.ts           # JSON 路径解析（用于编辑器高亮）
-│   ├── App.tsx
-│   └── main.tsx
-├── index.html
-├── package.json
-├── tailwind.config.js
-├── tsconfig.json
-└── vite.config.ts
-```
-
----
-
-## 🤝 贡献
+## 贡献
 
 欢迎提交 Issue 和 Pull Request！
 
@@ -215,16 +143,8 @@ JSONMind/
 4. 推送分支：`git push origin feature/your-feature`
 5. 发起 Pull Request
 
----
-
-## 📄 许可证
+## 许可证
 
 本项目基于 [MIT License](LICENSE) 开源。
 
----
 
-<div align="center">
-
-Made with ❤️ by [Cassius0924](https://github.com/Cassius0924)
-
-</div>
