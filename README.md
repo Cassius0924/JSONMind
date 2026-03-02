@@ -4,6 +4,8 @@
 
 **将 JSON 数据实时可视化为思维导图**
 
+[English](./README.en.md) | 中文
+
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite)](https://vitejs.dev/)
@@ -16,7 +18,7 @@
 
 ## 简介
 
-**JSONMind** 是一款基于浏览器的 JSON 可视化工具，能够将 JSON 数据实时渲染为交互式思维导图。左侧内置了 Monaco 代码编辑器，右侧是可交互的节点图，二者双向联动——编辑 JSON 文本时思维导图实时更新，悬停或选中思维导图节点时编辑器同步高亮对应代码片段。
+**JSONMind** 是一款基于浏览器的 JSON 可视化工具，能够将 JSON 数据实时渲染为交互式思维导图。左侧内置了代码编辑器，右侧是可交互的节点图，二者双向联动——编辑 JSON 文本时思维导图实时更新，悬停或选中思维导图节点时编辑器同步高亮对应代码片段。
 
 > 无需安装，打开浏览器即可使用。
 
@@ -28,7 +30,7 @@
 
 ## 界面预览
 
-<img width="4350" height="2344" alt="jsonmind-site-preview" src="https://github.com/user-attachments/assets/0601719a-761a-4b83-bf7a-efa40771940b" />
+![jsonmind-site-preview](./docs/assets/readme/jsonmind-site-preview.png)
 
 
 ## 功能特性
